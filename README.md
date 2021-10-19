@@ -16,4 +16,4 @@ A social media application with events and chat features
 ### Creating Walking Skeleton - Part 2: The Client Side
 - Creating the React with TypeScript client app 
 - Fetching data from API with Axios after setting CORS policy
-- Adding styling framework (Semantic UI)
+- Adding the styling framework (Semantic UI)
