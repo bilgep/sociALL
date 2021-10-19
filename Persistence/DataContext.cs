@@ -9,6 +9,6 @@ namespace Persistence
         {
         }
 
-        public DbSet<Event> Events { get; set; }
+        public DbSet<SocialEvent> Events { get; set; }
     }
 }

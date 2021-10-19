@@ -18,13 +18,13 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Event>>> GetEvents()
+        public async Task<ActionResult<List<SocialEvent>>> GetEvents()
         {
             return await _context.Events.ToListAsync();
         }
         
         [HttpGet("id")]
-        public async Task<ActionResult<Event>> GetEvent(Guid id)
+        public async Task<ActionResult<SocialEvent>> GetEvent(Guid id)
         {
             return await _context.Events.FindAsync(id);
         }

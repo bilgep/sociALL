@@ -10,8 +10,10 @@ A social media application with events and chat features
 ### Creating Walking Skeleton - Part 1: The API Side
 - Creating solution and projects
 - Creating first entity
-- Setting up Entity Framwwork Core and triggering a migration by code first approach
+- Setting up Entity Framwork Core and triggering the migration - code first approach
 - Creating database and seeding data
 - Adding first API Controller
 ### Creating Walking Skeleton - Part 2: The Client Side
-- ...
+- Creating the React with TypeScript client app 
+- Fetching data from API with Axios after setting CORS policy
+- Adding styling framework (Semantic UI)
