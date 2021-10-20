@@ -17,3 +17,7 @@ A social media application with events and chat features
 - Creating the React with TypeScript client app 
 - Fetching data from API with Axios after setting CORS policy
 - Adding the styling framework (Semantic UI)
+### Creating CRUD Application: The API Side 
+- Implementing CQRS principles (Command & Query Responsibility Segregation) with Mediator pattern (by MediatR Dependency Injection NuGet package) on Application layer
+- Creating Create, Edit, Delete, List features in Application layer + using AutoMapper extension for ASP.NET Core
+- Modifying the Startup class with extension methods
