@@ -21,3 +21,26 @@ A social media application with events and chat features
 - Implementing CQRS principles (Command & Query Responsibility Segregation) with Mediator pattern (by MediatR Dependency Injection NuGet package) on Application layer
 - Creating Create, Edit, Delete, List features in Application layer + using AutoMapper extension for ASP.NET Core
 - Modifying the Startup class with extension methods
+### Creating CRUD Application: The Client Side 
+- Arranging the folder structure of client application 
+    > src
+      > app
+        > layout (css, tsx files)
+        > modules (ts files)
+      > features 
+        > events
+          > dashboard 
+          > details
+          > form
+- Creating TypeScript interface from JSON response of the API endpoint (by using an online JSON to TypeScript converter)
+- Defining newly created specific TypeScript types (like SocialEvent) in client application operations
+- Adding a navigation bar (Semantic-UI)
+- Adding Event Dashboard feature (structuring with Semantic UI Grid) by passing events from App.tsx to Event Dashboard feature
+- Creating an Event List (a child component of event dashboard) and adding into Event Dashboard feature by passing events from Dashboard to the EventList
+- Creating an Event Form component for editing or creating an event
+- Passing the selected event (if exists) across the related components
+- Implementing the editMode functionality 
+- Installing "uuid" (npm install uuid) package in client app for Guid usage
+- Handling the form submission
+- Adding Delete Event functionality into the EventList feature
+
