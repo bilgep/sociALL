@@ -1,10 +1,10 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import axios from 'axios';
-import { Container} from 'semantic-ui-react';
+import { Container } from 'semantic-ui-react';
 import { SocialEvent } from '../modules/socialevent';
 import NavBar from './NavBar';
 import EventDashboard from '../../features/events/dashboard/EventDashboard';
-import {v4 as uuid} from 'uuid';
+import { v4 as uuid } from 'uuid';
+import agent from '../api/agent';
 
 function App() {
 
@@ -12,45 +12,66 @@ function App() {
   // We're using the function setEvents to set the state
   // We're setting our state to empty array by using useState([]) hook
   const [events, setEvents] = useState<SocialEvent[]>([]);
-  const [selectedEvent , setSelectedEvent] = useState<SocialEvent | undefined>(undefined);
+  const [selectedEvent, setSelectedEvent] = useState<SocialEvent | undefined>(undefined);
   const [editMode, setEditMode] = useState(false);
 
   // Use effect hook is used to pass dependencies or to do some final tasks like cleaning up
   useEffect(() => {
-    axios.get<SocialEvent[]>('http://localhost:5000/api/events').then((response) => {
-      setEvents(response.data);
+    agent.Events.list().then((response) => {
+
+      let events: SocialEvent[] = [];
+      response.forEach(event => {
+        event.date = event.date.split('T')[0];
+        events.push(event);
+      });
+      setEvents(events);
     });
-    
   }, []);
 
 
-  function handleSelectEvent(id: string){
+  function handleSelectEvent(id: string) {
     setSelectedEvent(events.find(event => event.id === id))
   }
 
-  function handleCancelSelectEvent(){
+  function handleCancelSelectEvent() {
     setSelectedEvent(undefined);
   }
 
-  function handleFormOpen(id?: string ){
+  function handleFormOpen(id?: string) {
     id ? handleSelectEvent(id) : handleCancelSelectEvent();
     setEditMode(true);
   }
 
-  function handleFormClose(){
+  function handleFormClose() {
     setEditMode(false);
   }
 
-  function handleCreateEditEvent(event: SocialEvent){
-    event.id ? setEvents([...events.filter(x => x.id !== event.id), event]) : setEvents([...events, {...event, id: uuid()}]);
-    setEditMode(false);
-    setSelectedEvent(event);
+  function handleCreateEditEvent(event: SocialEvent) {
+
+    if (event.id) {
+      agent.Events.update(event).then(() => {
+        setEvents([...events.filter(x => x.id !== event.id), event]);
+        setSelectedEvent(event);
+        setEditMode(false);
+      })
+    }
+    else {
+      event.id = uuid();
+      agent.Events.create(event).then(() => {
+        setEvents([...events, event]);
+        setSelectedEvent(event);
+        setEditMode(false);
+      });
+    }
+
   }
 
-  function handleDeleteEvent(id: string){
-    setEvents([...events.filter( x => x.id !== id)]);
-    setEditMode(false);
-    setSelectedEvent(undefined);
+  function handleDeleteEvent(id: string) {
+    agent.Events.delete(id).then(() => {
+      setEvents([...events.filter(x => x.id !== id)]);
+      setEditMode(false);
+      setSelectedEvent(undefined);
+    });
   }
 
   return (
@@ -58,14 +79,14 @@ function App() {
 
       <NavBar openForm={handleFormOpen} />
 
-      <Container style={{marginTop: '7em'}}>
+      <Container style={{ marginTop: '7em' }}>
 
-        <EventDashboard 
-          events={events} 
-          selectedEvent={selectedEvent} 
-          selectEvent={handleSelectEvent} 
+        <EventDashboard
+          events={events}
+          selectedEvent={selectedEvent}
+          selectEvent={handleSelectEvent}
           cancelSelectEvent={handleCancelSelectEvent}
-          editMode = {editMode}
+          editMode={editMode}
           openForm={handleFormOpen}
           closeForm={handleFormClose}
           createEditEvent={handleCreateEditEvent}

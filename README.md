@@ -23,15 +23,15 @@ A social media application with events and chat features
 - Modifying the Startup class with extension methods
 ### Creating CRUD Application: The Client Side 
 - Arranging the folder structure of client application 
-    > src
-      > app
-        > layout (css, tsx files)
-        > modules (ts files)
-      > features 
-        > events
-          > dashboard 
-          > details
-          > form
+    + src
+      + app
+        + layout (css, tsx files)
+        + modules (ts files)
+      + features 
+        + events
+          + dashboard 
+          + details
+          + form
 - Creating TypeScript interface from JSON response of the API endpoint (by using an online JSON to TypeScript converter)
 - Defining newly created specific TypeScript types (like SocialEvent) in client application operations
 - Adding a navigation bar (Semantic-UI)
@@ -43,4 +43,8 @@ A social media application with events and chat features
 - Installing "uuid" (npm install uuid) package in client app for Guid usage
 - Handling the form submission
 - Adding Delete Event functionality into the EventList feature
+### Axios Implementation
+- Creating a centralized Axios operations structure 
+- Using generic types
+- Connecting client app requests (CRUD) with API
 
