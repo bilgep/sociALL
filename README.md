@@ -47,4 +47,7 @@ A social media application with events and chat features
 - Creating a centralized Axios operations structure 
 - Using generic types
 - Connecting client app requests (CRUD) with API
+### Refactoring: Centralizing the Application with State Management System (MobX) Implementation, React Context and MobX React Lite (observables)
+- Creating Stores.
+- Using stores in JSX components and passing data across the application
 

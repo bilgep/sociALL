@@ -1,17 +1,16 @@
+import { observer } from "mobx-react-lite";
 import React, { ChangeEvent, useState } from "react";
 import { Button, Form, Segment } from "semantic-ui-react";
 import { SocialEvent } from "../../../app/modules/socialevent";
+import { useStore } from "../../../app/stores/store";
 
-interface Props
-{
-    event: SocialEvent | undefined;
-    closeForm: () => void;
-    createEditEvent: (event: SocialEvent) => void;
-}
 
-export default function EventForm({event, closeForm, createEditEvent}: Props){
+export default observer (function EventForm(){
 
-    const initialState = event ?? {
+const {eventStore} = useStore();
+const {selectedEvent, closeForm, createEditEvent} = eventStore;
+
+    const initialState = selectedEvent ?? {
         id: '',
         title: '',
         category: '',
@@ -25,7 +24,6 @@ export default function EventForm({event, closeForm, createEditEvent}: Props){
 
     function handleSubmit(){
         createEditEvent(formEvent);
-
     }
 
     function handleInputChange(event : ChangeEvent<HTMLInputElement | HTMLTextAreaElement>){
@@ -39,12 +37,12 @@ export default function EventForm({event, closeForm, createEditEvent}: Props){
                 <Form.Input placeholder='Title' value={formEvent.title} name='title' onChange={handleInputChange} />
                 <Form.TextArea placeholder='Description' value={formEvent.description} name='description'  onChange={handleInputChange} />
                 <Form.Input placeholder='Category' value={formEvent.category} name='category'  onChange={handleInputChange} />
-                <Form.Input placeholder='Date' value={formEvent.date} name='date'  onChange={handleInputChange} />
+                <Form.Input placeholder='Date' value={formEvent.date} name='date' type='date'  onChange={handleInputChange} />
                 <Form.Input placeholder='City' value={formEvent.city} name='city'  onChange={handleInputChange}  />
                 <Form.Input placeholder='Venue' value={formEvent.venue} name='venue'  onChange={handleInputChange} />
                 <Button floated='right' positive type='submit' content='Submit'/>
-                <Button floated='right' type='button' content='Cancel'  onClick={() => { closeForm(); console.log('Cancel')}}/>
+                <Button floated='right' type='button' content='Cancel'  onClick={() => {closeForm()}}/>
             </Form> 
         </Segment>
     )
-}
+})

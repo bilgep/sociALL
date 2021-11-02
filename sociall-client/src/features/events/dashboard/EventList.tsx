@@ -1,15 +1,14 @@
+import { observer } from "mobx-react-lite";
 import React from "react";
 import { Button, Item, Label, Segment} from "semantic-ui-react";
-import { SocialEvent } from "../../../app/modules/socialevent";
+import { useStore } from "../../../app/stores/store";
 
-interface Props
-{
-    events: SocialEvent[];
-    selectEvent: (id: string) => void;
-    deleteEvent: (id: string) => void;
-}
 
-export default function EventList({events, selectEvent, deleteEvent}: Props){
+export default observer( function EventList(){
+
+    const {eventStore} = useStore();
+    const {getEventsByDate: events, deleteEvent} = eventStore;
+
     return(
         <Segment>
             <Item.Group divided>
@@ -27,7 +26,7 @@ export default function EventList({events, selectEvent, deleteEvent}: Props){
                                 <div>{event.city}, {event.venue}</div>
                             </Item.Description>
                             <Item.Extra>
-                                <Button floated='right' content='View' color='blue' onClick={() => {selectEvent(event.id)}}/>
+                                <Button floated='right' content='View' color='blue' onClick={() => {eventStore.selectEvent(event.id)}}/>
                                 <Button floated='right' content='Delete' color='red' onClick={() => {deleteEvent(event.id)}}/>
                                 <Label content={event.category} basic/>
                             </Item.Extra>
@@ -38,4 +37,4 @@ export default function EventList({events, selectEvent, deleteEvent}: Props){
             
         </Segment>
     )
-}
+})
