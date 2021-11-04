@@ -1,16 +1,18 @@
 import { observer } from "mobx-react-lite";
-import React from "react";
+import React, { useEffect } from "react";
 import { Grid } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
-import EventDetail from "../details/EventDetail";
-import EventForm from "../form/EventForm";
 import EventList from "./EventList";
 
 export default observer( function EventDashboard() {
 
     const {eventStore} = useStore();
-    const {selectedEvent, editMode} = eventStore;
+    const {loadEvents} = eventStore;
 
+    useEffect(() => {
+        loadEvents();    
+    }, [loadEvents]);
+    
     return (
         <Grid>
             <Grid.Column width='10'>
@@ -18,13 +20,7 @@ export default observer( function EventDashboard() {
             </Grid.Column>
             <Grid.Column width='6'>
 
-                    {selectedEvent && !editMode &&
-                        <EventDetail />
-                    }
-
-                    {editMode &&
-                        <EventForm />
-                    }
+            <h2>TO DO: Event Filters</h2>
 
             </Grid.Column>
 

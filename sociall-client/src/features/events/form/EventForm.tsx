@@ -1,29 +1,50 @@
 import { observer } from "mobx-react-lite";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
+import { useHistory, useParams } from "react-router";
 import { Button, Form, Segment } from "semantic-ui-react";
-import { SocialEvent } from "../../../app/modules/socialevent";
 import { useStore } from "../../../app/stores/store";
+import { v4 as uuid } from 'uuid';
 
 
 export default observer (function EventForm(){
 
-const {eventStore} = useStore();
-const {selectedEvent, closeForm, createEditEvent} = eventStore;
+    const {eventStore} = useStore();
+    const {createEvent, updateEvent, loadEvent} = eventStore;
+    const {id} = useParams<{id: string}>();
+    const history = useHistory();
 
-    const initialState = selectedEvent ?? {
-        id: '',
-        title: '',
-        category: '',
-        date: '',
-        description: '',
-        city: '',
-        venue: ''        
-    };
+    const [formEvent, setEvent] = useState({
+            id: '',
+            title: '',
+            category: '',
+            date: '',
+            description: '',
+            city: '',
+            venue: ''        
+    });
 
-    const [formEvent, setEvent] = useState<SocialEvent>(initialState);
+    useEffect(() => {
+        if(id) loadEvent(id).then(event =>  setEvent(event!))
+    }, [id, loadEvent]);
+
 
     function handleSubmit(){
-        createEditEvent(formEvent);
+
+        if(formEvent.id.length === 0) {
+            let tempEvent = {...formEvent, id: uuid()};
+            createEvent(tempEvent).then(() => {
+                formEvent.id = tempEvent.id;
+                history.push(`/events/${tempEvent.id}`);
+            });
+
+            
+        }
+        else
+        {
+            updateEvent(formEvent).then(() => {
+                history.push(`/events/${formEvent.id}`);
+            });
+        }
     }
 
     function handleInputChange(event : ChangeEvent<HTMLInputElement | HTMLTextAreaElement>){
@@ -41,7 +62,7 @@ const {selectedEvent, closeForm, createEditEvent} = eventStore;
                 <Form.Input placeholder='City' value={formEvent.city} name='city'  onChange={handleInputChange}  />
                 <Form.Input placeholder='Venue' value={formEvent.venue} name='venue'  onChange={handleInputChange} />
                 <Button floated='right' positive type='submit' content='Submit'/>
-                <Button floated='right' type='button' content='Cancel'  onClick={() => {closeForm()}}/>
+                <Button floated='right' type='button' content='Cancel'  />
             </Form> 
         </Segment>
     )

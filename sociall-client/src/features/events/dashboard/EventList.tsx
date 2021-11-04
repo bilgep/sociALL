@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import React from "react";
+import { Link } from "react-router-dom";
 import { Button, Item, Label, Segment} from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
 
@@ -8,6 +8,7 @@ export default observer( function EventList(){
 
     const {eventStore} = useStore();
     const {getEventsByDate: events, deleteEvent} = eventStore;
+    
 
     return(
         <Segment>
@@ -26,7 +27,7 @@ export default observer( function EventList(){
                                 <div>{event.city}, {event.venue}</div>
                             </Item.Description>
                             <Item.Extra>
-                                <Button floated='right' content='View' color='blue' onClick={() => {eventStore.selectEvent(event.id)}}/>
+                                <Button floated='right' content='View' color='blue' as={Link} to={`/events/${event.id}`}/>
                                 <Button floated='right' content='Delete' color='red' onClick={() => {deleteEvent(event.id)}}/>
                                 <Label content={event.category} basic/>
                             </Item.Extra>

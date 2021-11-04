@@ -1,7 +1,7 @@
 import { makeAutoObservable, runInAction, toJS } from "mobx";
 import agent from "../api/agent";
 import { SocialEvent } from "../modules/socialevent";
-import { v4 as uuid } from 'uuid';
+
 
 export default class EventStore {
 
@@ -20,40 +20,82 @@ export default class EventStore {
     loadEvents = async () => {
         try {
             const tempEvents = await agent.Events.list();
-
-            runInAction(() => {
+            runInAction(() => { this.events = toJS(this.events); });
+            if(this.events.length <= 0)
+            {
                 tempEvents.forEach(e => {
-                    e.date = e.date.split('T')[0];
-                    this.events.push(e);
+                    this.modifyDate(e);
+                    runInAction(() => {
+                        this.events.push(e);
+                    });
                 });
-
-                this.events = toJS(this.events);
-            });
+            }   
         } catch (error) {
             console.log(error);
         }
     }
 
+    loadEvent = async (id: string) => {
+        runInAction(() => {
+            this.selectedEvent = undefined;
+        });
+        
+        try{
 
-    selectEvent = (id: string | undefined) => {
-        this.selectedEvent = toJS(this.events).find(x => x.id === id);
+            if(this.getEvent(id))
+            {
+                let event = this.getEvent(id);
 
+                this.modifyDate(event as SocialEvent);
+                runInAction(() => {
+                    this.selectedEvent = event;
+
+                });
+
+            }
+            else{
+                let event = await agent.Events.details(id);
+                this.modifyDate(event as SocialEvent);
+                runInAction(() => {
+                    this.selectedEvent = event;
+
+                });
+            }
+
+            return toJS(this.selectedEvent);
+        }
+        catch(e){
+            console.log(e);
+        }
     }
 
-    cancelSelectedEvent = () => {
-        this.selectedEvent = undefined;
-        this.editMode = false;
+    private getEvent = (id: string) => {
+        return this.events.find(e =>  e.id === id);
     }
 
-    openForm = (id?: string) => {
-        id ? this.selectEvent(id) : this.cancelSelectedEvent();
-        this.editMode = true;
+    private modifyDate = (e: SocialEvent) => {
+        e.date = e.date.split('T')[0];        
     }
 
-    closeForm = () => {
-        this.selectedEvent = undefined;
-        this.editMode = false;
-    }
+    // selectEvent = (id: string | undefined) => {
+    //     this.selectedEvent = toJS(this.events).find(x => x.id === id);
+
+    // }
+
+    // cancelSelectedEvent = () => {
+    //     this.selectedEvent = undefined;
+    //     this.editMode = false;
+    // }
+
+    // openForm = (id?: string) => {
+    //     id ? this.selectEvent(id) : this.cancelSelectedEvent();
+    //     this.editMode = true;
+    // }
+
+    // closeForm = () => {
+    //     this.selectedEvent = undefined;
+    //     this.editMode = false;
+    // }
 
     deleteEvent = async (id: string) => {
         try {
@@ -70,36 +112,34 @@ export default class EventStore {
         }
     }
 
-    createEditEvent = async (event: SocialEvent) => {
+    createEvent = async(event: SocialEvent) =>{
         try {
-            if(event.id) {
-                await agent.Events.update(event);
-
-                runInAction(() => {
-                    this.events = toJS(this.events).filter(x => x.id !== event.id);
-                    this.events.push(event);
-                    this.selectedEvent = event;
-                    this.editMode = false;
-                });
-            }
-            else {
-                event.id = uuid();
-                await agent.Events.create(event);
+            await agent.Events.create(event);
 
                 runInAction(() => {
                     this.events.push(event);
                     this.selectedEvent = event;
                     this.editMode = false;
                 })
-            }
-
-            runInAction(() => {
-                toJS(this.events).push(event);
-                this.selectedEvent = event;
-                this.editMode = false;
-            })
 
         } catch (error) {
+            console.log(error);
+        }
+    }
+
+    updateEvent = async (event: SocialEvent) => {
+        try {
+                await agent.Events.update(event);
+
+                runInAction(() => {
+                    this.events = toJS(this.events).filter(x => x.id !== event.id);
+                    toJS(this.events).push(event);
+                    this.selectedEvent = event;
+                    this.editMode = false;
+                });
+
+            }
+            catch (error) {
             console.log(error);
         }
     }

@@ -1,36 +1,46 @@
-import React from "react";
+import { observer } from "mobx-react-lite";
+import React, { useEffect } from "react";
+import { useParams } from "react-router";
+import { Link } from "react-router-dom";
 import { Button, Card, Image } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
 import TempComponent from "../../../TempComponent";
 
 
-export default function EventDetail() {
+export default observer (function EventDetail() {
 
     const {eventStore} = useStore();
-    const {selectedEvent: event, openForm, cancelSelectedEvent} = eventStore;
+    const {loadEvent, selectedEvent } = eventStore;
+    const {id} = useParams<{id: string}>();
+
+    useEffect(() => {
+        if(id) {
+            loadEvent(id);
+        }
+      }, [id, loadEvent]);
+
+    if(!selectedEvent)  return <TempComponent />; // TODO
     
-    if(!event) return <TempComponent />; 
-    // TODO
 
     return (
         <Card fluid>
-            <Image src={`/assets/categoryImages/${event.category}.jpg`} />
+            <Image src={`/assets/categoryImages/${selectedEvent.category}.jpg`} />
             <Card.Content>
-                <Card.Header>{event.title}</Card.Header>
+                <Card.Header>{selectedEvent.title}</Card.Header>
                 <Card.Meta>
-                    <span>{event.date}</span>
+                    <span>{selectedEvent.date}</span>
                 </Card.Meta>
                 <Card.Description>
-                    {event.description}
+                    {selectedEvent.description}
                 </Card.Description>
             </Card.Content>
             <Card.Content extra>
                 <Button.Group widths='2'>
-                    <Button basic color='blue' content='Edit' onClick={() => {openForm(event.id)}} />
-                    <Button basic color='grey' content='Cancel'  onClick={() => {cancelSelectedEvent()}}  /> 
+                    <Button basic color='blue' content='Edit' as={Link} to={`/editEvent/${selectedEvent.id}`} />
+                    <Button basic color='grey' content='Cancel' as={Link} to={`/events/${selectedEvent.id}`}  /> 
                 </Button.Group>
             </Card.Content>
         </Card>
     )
 
-}
+})

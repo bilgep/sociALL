@@ -50,4 +50,7 @@ A social media application with events and chat features
 ### Refactoring: Centralizing the Application with State Management System (MobX) Implementation, React Context and MobX React Lite (observables)
 - Creating Stores.
 - Using stores in JSX components and passing data across the application
+### Refactoring: Page Transition & Routing Implementation
+- Installing React Router
+- Adding BrowserRouter and Routes
 
