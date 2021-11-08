@@ -1,41 +1,29 @@
 import { observer } from "mobx-react-lite";
-import { Link } from "react-router-dom";
-import { Button, Item, Label, Segment} from "semantic-ui-react";
+import { Fragment } from "react";
+import { Header} from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
+import EventListItem from "./EventListItem";
 
 
-export default observer( function EventList(){
+export default observer(function EventList() {
 
-    const {eventStore} = useStore();
-    const {getEventsByDate: events, deleteEvent} = eventStore;
-    
+    const { eventStore } = useStore();
+    const { getGroupedEvents } = eventStore;
 
-    return(
-        <Segment>
-            <Item.Group divided>
-                {events.map(event =>
-                    <Item key={event.id}>
-                        <Item.Content>
-                            <Item.Header as='a'>
-                                {event.title}
-                            </Item.Header>
-                            <Item.Meta>
-                                {event.date}
-                            </Item.Meta>
-                            <Item.Description>
-                                <div>{event.description}</div>
-                                <div>{event.city}, {event.venue}</div>
-                            </Item.Description>
-                            <Item.Extra>
-                                <Button floated='right' content='View' color='blue' as={Link} to={`/events/${event.id}`}/>
-                                <Button floated='right' content='Delete' color='red' onClick={() => {deleteEvent(event.id)}}/>
-                                <Label content={event.category} basic/>
-                            </Item.Extra>
-                        </Item.Content>
-                    </Item>
-                )}
-            </Item.Group>
-            
-        </Segment>
+
+    return (
+        <>
+            {getGroupedEvents.map(([group, events]) => (
+                <Fragment key={group}>
+                    <Header sub color='teal'>
+                        {group}
+                    </Header>
+
+                    {events.map(event =>
+                        <EventListItem event={event} key={event.id} />
+                    )}
+                </Fragment>
+            ))}
+        </>
     )
 })

@@ -13,6 +13,16 @@ export default class EventStore {
         return Array.from(this.events.values()).sort((a,b) => Date.parse(a.date) - Date.parse(b.date));
     }
 
+    get getGroupedEvents(){
+        return Object.entries(
+            this.getEventsByDate.reduce((evnts, evnt) => {
+                const date = evnt.date;
+                evnts[date] = evnts[date] ? [...evnts[date], evnt] : [evnt];
+                return evnts;
+            }, {} as {[key: string]: SocialEvent[]})
+        )
+    }
+
     constructor() {
         makeAutoObservable(this)
     }

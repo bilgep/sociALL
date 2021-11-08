@@ -53,4 +53,9 @@ A social media application with events and chat features
 ### Refactoring: Page Transition & Routing Implementation
 - Installing React Router
 - Adding BrowserRouter and Routes
-
+### Styling the UI and Refactoring the Events' List
+- Adding List Item component
+- Grouping events by date
+- Refactoring: Creating new components (header, sidebar, info, chat) for the detail page
+- Adding Filters component into the Dashboard (by installing and using the React Calendar)
+- Styling the Home Page

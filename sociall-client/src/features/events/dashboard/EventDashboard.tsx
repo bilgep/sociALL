@@ -2,6 +2,7 @@ import { observer } from "mobx-react-lite";
 import React, { useEffect } from "react";
 import { Grid } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
+import EventFilters from "./EventFilters";
 import EventList from "./EventList";
 
 export default observer( function EventDashboard() {
@@ -19,9 +20,7 @@ export default observer( function EventDashboard() {
                 <EventList />
             </Grid.Column>
             <Grid.Column width='6'>
-
-            <h2>TO DO: Event Filters</h2>
-
+                <EventFilters />
             </Grid.Column>
 
         </Grid>
