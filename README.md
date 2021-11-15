@@ -59,3 +59,11 @@ A social media application with events and chat features
 - Refactoring: Creating new components (header, sidebar, info, chat) for the detail page
 - Adding Filters component into the Dashboard (by installing and using the React Calendar)
 - Styling the Home Page
+### Error Handling
+- API > Fluent Validation: Installing and implementing the fluent validation at Mediator (MediatR) level (Command validation)
+- Refactoring Mediator Handler and creating a result object
+- Handling exceptions by creating a custom exception handling middleware
+- Creating Test Error Component to preview; not found, bad request, validation, server, unauthorized, bad guid errors
+- Checking the response with axios interceptors at a central level and prompting exceptions + Prompting error messages as toast messages by React Toastify package
+
+

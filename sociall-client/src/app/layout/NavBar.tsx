@@ -15,6 +15,7 @@ export default function NavBar()
                 sociALL <img src="/assets/logo.png" alt="logo" style={{marginLeft: '10px'}}/> 
                 </Menu.Item>
                 <Menu.Item as={NavLink} to='/events' name="Events"/>
+                <Menu.Item as={NavLink} to='/errors' name="Errors"/>
                 <Menu.Item>
                     <Button positive content="Create Event" as={NavLink} to='/createEvent'></Button>
                 </Menu.Item>

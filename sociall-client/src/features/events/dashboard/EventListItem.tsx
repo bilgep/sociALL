@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button, Icon, Item, Segment } from "semantic-ui-react";
-import { SocialEvent } from "../../../app/modules/socialevent";
+import { SocialEvent } from "../../../app/models/socialevent";
 
 interface Props {
     event: SocialEvent;

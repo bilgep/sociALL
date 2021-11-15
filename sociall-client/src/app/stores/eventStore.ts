@@ -1,6 +1,6 @@
 import { makeAutoObservable, runInAction, toJS } from "mobx";
 import agent from "../api/agent";
-import { SocialEvent } from "../modules/socialevent";
+import { SocialEvent } from "../models/socialevent";
 
 
 export default class EventStore {

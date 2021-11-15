@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Core;
 using Domain;
 using MediatR;
 using Persistence;
@@ -10,13 +11,13 @@ namespace Application.Events
 {
     public class Details
     {
-        public class Query : IRequest<SocialEvent>
+        public class Query : IRequest<Result<SocialEvent>>
         {
             public Guid Id { get; set; }
         }
     }
 
-    public class Handler : IRequestHandler<Query, SocialEvent>
+    public class Handler : IRequestHandler<Query, Result<SocialEvent>>
     {
         private readonly DataContext _context;
         public Handler(DataContext context)
@@ -24,9 +25,11 @@ namespace Application.Events
             _context = context;
         }
 
-        public async Task<SocialEvent> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<Result<SocialEvent>> Handle(Query request, CancellationToken cancellationToken)
         {
-            return await _context.Events.FindAsync(request.Id);
+            var socialEvent =  await _context.Events.FindAsync(request.Id);
+            return Result<SocialEvent>.Success(socialEvent);
+            
         }
     }
 
