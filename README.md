@@ -65,5 +65,10 @@ A social media application with events and chat features
 - Handling exceptions by creating a custom exception handling middleware
 - Creating Test Error Component to preview; not found, bad request, validation, server, unauthorized, bad guid errors
 - Checking the response with axios interceptors at a central level and prompting exceptions + Prompting error messages as toast messages by React Toastify package
-
+### Refactoring: Form
+- Installing Formik package and setting up
+- Implementing validation with Yup
+- Creating reusable form components
+- Using React Date-Time picker and date-fns
+- Form submission with Formik
 

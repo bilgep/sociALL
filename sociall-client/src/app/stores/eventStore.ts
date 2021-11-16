@@ -1,6 +1,7 @@
 import { makeAutoObservable, runInAction, toJS } from "mobx";
 import agent from "../api/agent";
 import { SocialEvent } from "../models/socialevent";
+import {format} from 'date-fns';
 
 
 export default class EventStore {
@@ -10,13 +11,14 @@ export default class EventStore {
     editMode = false;
 
     get getEventsByDate(){
-        return Array.from(this.events.values()).sort((a,b) => Date.parse(a.date) - Date.parse(b.date));
+        return Array.from(this.events.values()).sort((a,b) => a.date!.getTime() - b.date!.getTime());
     }
 
     get getGroupedEvents(){
         return Object.entries(
             this.getEventsByDate.reduce((evnts, evnt) => {
-                const date = evnt.date;
+                // const date = evnt.date!.toISOString().split('T')[0];
+                const date = format( evnt.date!, 'dd MMM yyyy' );
                 evnts[date] = evnts[date] ? [...evnts[date], evnt] : [evnt];
                 return evnts;
             }, {} as {[key: string]: SocialEvent[]})
@@ -84,7 +86,7 @@ export default class EventStore {
     }
 
     private modifyDate = (e: SocialEvent) => {
-        e.date = e.date.split('T')[0];        
+        e.date = new Date(e.date!);       
     }
 
     // selectEvent = (id: string | undefined) => {

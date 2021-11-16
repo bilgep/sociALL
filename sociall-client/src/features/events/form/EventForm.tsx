@@ -1,34 +1,53 @@
 import { observer } from "mobx-react-lite";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router";
-import { Button, Form, Segment } from "semantic-ui-react";
+import { Button, Header, Segment } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
 import { v4 as uuid } from 'uuid';
+import { Formik , Form} from "formik";
+import * as Yup from 'yup';
+import MyTextInput from "../../../app/common/form/MyTextInput";
+import MyDateInput from "../../../app/common/form/MyDateInput";
+import MyTextArea from "../../../app/common/form/MyTextArea";
+import MySelectInput from "../../../app/common/form/MySelectInput";
+import { categoryOptions } from "../../../app/common/options/categoryOptions";
+import { SocialEvent } from "../../../app/models/socialevent";
 
 
-export default observer (function EventForm(){
+export default observer(function EventForm() {
 
-    const {eventStore} = useStore();
-    const {createEvent, updateEvent, loadEvent} = eventStore;
-    const {id} = useParams<{id: string}>();
+    const { eventStore } = useStore();
+    const { loadEvent, createEvent, updateEvent } = eventStore;
+    const { id } = useParams<{ id: string }>();
     const history = useHistory();
 
-    const [formEvent, setEvent] = useState({
-            id: '',
-            title: '',
-            category: '',
-            date: '',
-            description: '',
-            city: '',
-            venue: ''        
+    const [formEvent, setEvent] = useState<SocialEvent>({
+        id: '',
+        title: '',
+        category: '',
+        date: null,
+        description: '',
+        city: '',
+        venue: ''
+    });
+
+    const validationSchema = Yup.object({
+        title: Yup.string().required('The event title is required'),
+        description: Yup.string().required('The event description is required'),
+        category: Yup.string().required(),
+        date: Yup.string().required('The date is required').nullable(),
+        venue: Yup.string().required(),
+        city: Yup.string().required()
     });
 
     useEffect(() => {
-        if(id) loadEvent(id).then(event =>  setEvent(event!))
+        if (id) {
+            loadEvent(id).then(event => setEvent(event!));
+        }
     }, [id, loadEvent]);
 
 
-    function handleSubmit(){
+    function handleFormSubmit(formEvent: SocialEvent){
 
         if(formEvent.id.length === 0) {
             let tempEvent = {...formEvent, id: uuid()};
@@ -37,7 +56,7 @@ export default observer (function EventForm(){
                 history.push(`/events/${tempEvent.id}`);
             });
 
-            
+
         }
         else
         {
@@ -47,23 +66,36 @@ export default observer (function EventForm(){
         }
     }
 
-    function handleInputChange(event : ChangeEvent<HTMLInputElement | HTMLTextAreaElement>){
-        const {name, value} = event.target;
-        setEvent({...formEvent, [name] : value});
-    }
-
-    return(
+    return (
         <Segment clearing>
-            <Form onSubmit={handleSubmit} autoComplete='off'>
-                <Form.Input placeholder='Title' value={formEvent.title} name='title' onChange={handleInputChange} />
-                <Form.TextArea placeholder='Description' value={formEvent.description} name='description'  onChange={handleInputChange} />
-                <Form.Input placeholder='Category' value={formEvent.category} name='category'  onChange={handleInputChange} />
-                <Form.Input placeholder='Date' value={formEvent.date} name='date' type='date'  onChange={handleInputChange} />
-                <Form.Input placeholder='City' value={formEvent.city} name='city'  onChange={handleInputChange}  />
-                <Form.Input placeholder='Venue' value={formEvent.venue} name='venue'  onChange={handleInputChange} />
-                <Button floated='right' positive type='submit' content='Submit'/>
-                <Button floated='right' type='button' content='Cancel'  />
-            </Form> 
+            <Header content='Event Details' sub color='teal'/>
+            
+            <Formik 
+                enableReinitialize 
+                initialValues={formEvent} 
+                onSubmit={values => handleFormSubmit(values)} 
+                validationSchema={validationSchema}>
+                {({handleSubmit, isValid, isSubmitting, dirty}) => (
+
+                    <Form className='ui form' onSubmit={handleSubmit} autoComplete='off'>
+                        <MyTextInput name='title' placeholder='Title' />
+                        <MyTextArea placeholder='Description' name='description' rows={3}/>
+                        <MySelectInput options={categoryOptions} placeholder='Category' name='category' />
+                        <MyDateInput name='date' placeholderText='Date' showTimeSelect timeCaption='time' dateFormat='MMMM d, yyyy h:mm aa'/>
+                        
+                        <Header content='Location Details' sub color='teal'/>
+                        <MyTextInput placeholder='City' name='city'/>
+                        <MyTextInput placeholder='Venue'name='venue' />
+                        <Button 
+                            disabled={isSubmitting || !dirty || !isValid}
+                            floated='right' positive type='submit' content='Submit' />
+                        <Button floated='right' type='button' content='Cancel' />
+                    </Form>
+
+                )}
+            </Formik>
+
+
         </Segment>
     )
 })

@@ -1,7 +1,9 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react'
+import { Link } from 'react-router-dom';
 import {Button, Header, Item, Segment, Image} from 'semantic-ui-react'
 import { SocialEvent } from '../../../app/models/socialevent';
+import {format} from 'date-fns';
 
 const eventImageStyle = {
     filter: 'brightness(30%)'
@@ -34,7 +36,7 @@ export default observer (function EventDetailedHeader({event}: Props) {
                                     content={event.title}
                                     style={{color: 'white'}}
                                 />
-                                <p>{event.date}</p>
+                                <p>{format(event.date!, 'dd MMM yyyy h:mm aa')}</p>
                                 <p>
                                     Hosted by <strong>USER</strong>
                                 </p>
@@ -46,7 +48,7 @@ export default observer (function EventDetailedHeader({event}: Props) {
             <Segment clearing attached='bottom'>
                 <Button color='teal'>Join Event</Button>
                 <Button>Cancel attendance</Button>
-                <Button color='orange' floated='right'>
+                <Button color='orange' floated='right' as={Link} to={`/editEvent/${event.id}`}>
                     Manage Event
                 </Button>
             </Segment>

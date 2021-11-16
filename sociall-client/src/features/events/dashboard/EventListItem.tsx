@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Button, Icon, Item, Segment } from "semantic-ui-react";
 import { SocialEvent } from "../../../app/models/socialevent";
+import {format} from 'date-fns';
 
 interface Props {
     event: SocialEvent;
@@ -29,7 +30,7 @@ export default function EventListItem({ event }: Props) {
                 </Segment>
                 <Segment>
                     <span>
-                        <Icon name='clock' />{event.date} 
+                        <Icon name='clock' />{format(event.date!, 'dd MMM yyyy h:mm aa' )} 
                         &nbsp; &nbsp; 
                         <Icon name='marker' />{event.venue}
                     </span>
